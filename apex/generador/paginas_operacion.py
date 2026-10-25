@@ -77,9 +77,9 @@ select a.alerta_id,
                       ("TITULO", "Alerta", {"link": "f?p=&APP_ID.:53:&SESSION.::&DEBUG.:RP:P53_ALERTA_ID:#ALERTA_ID#", "linktext": "#TITULO#"}),
                       ("ESTADO", "Estado", {"raw": True}), ("CUANDO", "Emitida")])
     p.chart("Menciones por canal · últimos 60 días", [
-        {"name": "Prensa", "sql": "select to_char(trunc(fecha_mencion, 'IW'), 'DD/MM') etiqueta, trunc(fecha_mencion, 'IW') orden, count(*) valor from v_mencion where modulo_codigo = 'PRE' and es_duplicado = 'N' and estado <> 'DESCARTADA' and fecha_mencion > sysdate - 60 group by trunc(fecha_mencion, 'IW') order by 2", "color": "#1c5f9e"},
-        {"name": "Redes", "sql": "select to_char(trunc(fecha_mencion, 'IW'), 'DD/MM') etiqueta, trunc(fecha_mencion, 'IW') orden, count(*) valor from v_mencion where modulo_codigo = 'RED' and es_duplicado = 'N' and estado <> 'DESCARTADA' and fecha_mencion > sysdate - 60 group by trunc(fecha_mencion, 'IW') order by 2", "color": "#6a3fb5"},
-        {"name": "Congreso", "sql": "select to_char(trunc(fecha_mencion, 'IW'), 'DD/MM') etiqueta, trunc(fecha_mencion, 'IW') orden, count(*) valor from v_mencion where modulo_codigo = 'EC' and es_duplicado = 'N' and estado <> 'DESCARTADA' and fecha_mencion > sysdate - 60 group by trunc(fecha_mencion, 'IW') order by 2", "color": "#0f766e"},
+        {"name": "Prensa", "sql": "select to_char(trunc(fecha_mencion, 'IW'), 'IYYY\"-S\"IW') etiqueta, trunc(fecha_mencion, 'IW') orden, count(*) valor from v_mencion where modulo_codigo = 'PRE' and es_duplicado = 'N' and estado <> 'DESCARTADA' and fecha_mencion > sysdate - 60 group by trunc(fecha_mencion, 'IW') order by 2", "color": "#1c5f9e"},
+        {"name": "Redes", "sql": "select to_char(trunc(fecha_mencion, 'IW'), 'IYYY\"-S\"IW') etiqueta, trunc(fecha_mencion, 'IW') orden, count(*) valor from v_mencion where modulo_codigo = 'RED' and es_duplicado = 'N' and estado <> 'DESCARTADA' and fecha_mencion > sysdate - 60 group by trunc(fecha_mencion, 'IW') order by 2", "color": "#6a3fb5"},
+        {"name": "Congreso", "sql": "select to_char(trunc(fecha_mencion, 'IW'), 'IYYY\"-S\"IW') etiqueta, trunc(fecha_mencion, 'IW') orden, count(*) valor from v_mencion where modulo_codigo = 'EC' and es_duplicado = 'N' and estado <> 'DESCARTADA' and fecha_mencion > sysdate - 60 group by trunc(fecha_mencion, 'IW') order by 2", "color": "#0f766e"},
     ], chart_type="line", seq=30, new_row=False, span=5, height="280", y_title="Menciones por semana")
     p.report("Congreso · sesiones de hoy", """
 select s.sesion_id, s.titulo, s.instancia || nvl2(s.comision, ' · ' || s.comision, '') instancia,
@@ -343,7 +343,7 @@ begin
 end;""", items_submit="P13_DESDE,P13_HASTA")
     wk = "trunc(fecha_mencion, 'IW')"
     p.chart("Evolución semanal por canal", [
-        {"name": n, "sql": f"select to_char({wk}, 'DD/MM') etiqueta, count(*) valor, {wk} o from v_mencion where modulo_codigo = '{c}' and es_duplicado = 'N' and estado <> 'DESCARTADA' and fecha_mencion between to_date(:P13_DESDE, 'DD/MM/YYYY') and to_date(:P13_HASTA, 'DD/MM/YYYY') + 1 group by {wk} order by o",
+        {"name": n, "sql": f"select to_char({wk}, 'IYYY\"-S\"IW') etiqueta, count(*) valor, {wk} o from v_mencion where modulo_codigo = '{c}' and es_duplicado = 'N' and estado <> 'DESCARTADA' and fecha_mencion between to_date(:P13_DESDE, 'DD/MM/YYYY') and to_date(:P13_HASTA, 'DD/MM/YYYY') + 1 group by {wk} order by o",
          "color": col} for n, c, col in (("Prensa", "PRE", "#1c5f9e"), ("Redes", "RED", "#6a3fb5"), ("Congreso", "EC", "#0f766e"))
     ], chart_type="line", seq=10, span=7, items_submit="P13_DESDE,P13_HASTA", y_title="Menciones")
     p.chart("Distribución por tema y canal", [

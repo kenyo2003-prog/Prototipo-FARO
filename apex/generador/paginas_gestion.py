@@ -273,9 +273,9 @@ end;""")
 select c.control_id, c.descripcion, initcap(c.severidad) severidad, faro_ui.estado(c.resultado) resultado, c.registros_afectados,
        c.justificacion, c.justificado_por,
        case when dbms_lob.getlength(c.ids_afectados) > 2 then
-         (select listagg('<a class="faro-ref" href="' || apex_page.get_url(p_page => 21, p_items => 'P21_MENCION_ID', p_values => j.id) || '">M' || j.id || '</a>', ' ')
+         (select listagg('<a class="faro-ref" href="' || apex_page.get_url(p_page => 21, p_items => 'P21_MENCION_ID', p_values => j.id) || '">M' || j.id || '</a>', ' ' on overflow truncate '…' without count)
                  within group (order by j.n)
-            from json_table(c.ids_afectados, '$[*]' columns (n for ordinality, id number path '$')) j where j.n <= 15 and c.codigo <> 'DUPLICADOS_PENDIENTES') end registros
+            from json_table(c.ids_afectados, '$[*]' columns (n for ordinality, id number path '$')) j where j.n <= 10 and c.codigo <> 'DUPLICADOS_PENDIENTES') end registros
   from per_control c join per_periodo p on p.periodo_id = c.periodo_id
  where p.modulo_codigo = :P61_MODULO and p.periodo = :P61_PERIODO
  order by decode(c.resultado, 'FALLA', 1, 'JUSTIFICADO', 2, 'INFORMATIVO', 3, 4)""", seq=20, items_submit="P61_MODULO,P61_PERIODO",
@@ -321,7 +321,10 @@ select r.version, r.indicador, r.dimension, r.dimension_valor, r.valor, r.base, 
            attributes={"number_of_columns": "2", "page_action_on_selection": "NONE"})
     p.item("P62_MODULO", rc, "SELECT", "Módulo", colspan=3,
            lov="select nombre d, codigo r from seg_modulo where codigo <> 'TR' and faro_seg.puede(codigo, 'EDICION') = 'S' order by orden")
-    p.item("P62_PROMPT_VERSION_ID", rc, "SELECT", "Versión de prompt", lov=LOV["PROMPT_VERSION"], new_row=False, colspan=5)
+    p.item("P62_PROMPT_VERSION_ID", rc, "SELECT", "Versión de prompt", new_row=False, colspan=5, cascade="P62_MODULO",
+           lov="select p.nombre || ' · v' || v.version || ' (' || lower(v.estado) || ')' d, v.prompt_version_id r "
+               "from ia_prompt_version v join ia_prompt p on p.prompt_id = v.prompt_id "
+               "where p.tarea = 'CLASIFICACION' and p.modulo_codigo = :P62_MODULO order by decode(v.estado, 'ACTIVA', 0, 1), v.version desc")
     p.item("P62_DESDE", rc, "DATE", "Desde", default="to_char(trunc(sysdate) - 30, 'DD/MM/YYYY')", default_type="EXPRESSION", new_row=False, colspan=2)
     p.item("P62_HASTA", rc, "DATE", "Hasta", default="to_char(trunc(sysdate), 'DD/MM/YYYY')", default_type="EXPRESSION", new_row=False, colspan=2)
     p.item("P62_MUESTRA", rc, "NUMBER", "Tamaño de muestra (prueba)", default="20", colspan=3)
@@ -370,6 +373,8 @@ select l.lote_id, l.tipo, l.modulo_codigo modulo, p.codigo || ' v' || v.version 
         ("REEMPLAZA_HUMANAS", "Reemplaza correcciones"), ("SOLICITADO_POR", "Solicitado por"), ("CONFIRMADO_POR", "Confirmado por"),
         ("FECHA_INICIO", "Inicio", {"type": "DATE"}), ("REINTENTO_DE_ID", "Reintento de", {"type": "NUMBER"}),
     ], seq=40, sort=[("LOTE_ID", "DESC")])
+    p.process("Módulo por defecto", point="BEFORE_HEADER", when_type="ITEM_IS_NULL", when="P62_MODULO",
+              plsql=":P62_MODULO := case when instr(faro_seg.modulos('EDICION'), 'PRE') > 0 then 'PRE' when instr(faro_seg.modulos('EDICION'), 'RED') > 0 then 'RED' else 'EC' end;")
     p.process("Preparar", when_button=bprep, plsql="""
 :P62_LOTE_ID := faro_lab.crear_lote(:P62_TIPO, :P62_MODULO, :P62_PROMPT_VERSION_ID, to_date(:P62_DESDE, 'DD/MM/YYYY'),
                                    to_date(:P62_HASTA, 'DD/MM/YYYY'), null, :P62_MUESTRA, nvl(:P62_REEMPLAZAR, 'N'), :P62_AUTORIZACION);""")
