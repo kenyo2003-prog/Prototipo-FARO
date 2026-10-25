@@ -88,6 +88,11 @@ create or replace package body faro_nlq as
     return a;
   end interpretar;
 
+  function canales(p_modulos in varchar2) return varchar2 is
+  begin
+    return replace(replace(replace(replace(p_modulos, 'PRE', 'Prensa'), 'RED', 'Redes'), 'EC', 'Congreso'), ':', ', ');
+  end canales;
+
   function preguntar(p_conversacion_id in number, p_pregunta in varchar2) return number is
     a        t_alcance;
     l_prev   clob;
@@ -177,7 +182,7 @@ create or replace package body faro_nlq as
       -- Sin evidencia autorizada suficiente: se explicita la limitación, sin inferir
       l_txt := 'No existe información suficiente en los registros autorizados para responder esta pregunta ' ||
                '(periodo ' || to_char(a.desde, 'DD/MM/YYYY') || '–' || to_char(a.hasta, 'DD/MM/YYYY') ||
-               ', canales ' || replace(a.modulos, ':', ', ') || '). Puede ampliar el periodo o precisar el tema, vocero o canal.';
+               ', canales ' || canales(a.modulos) || '). Puede ampliar el periodo o precisar el tema, vocero o canal.';
     elsif faro_util.param('IA_PROVEEDOR', 'SIMULADO') = 'SIMULADO' then
       -- Tres voceros con más menciones dentro de lo recuperado
       l_k := l_voc.first;
@@ -193,7 +198,7 @@ create or replace package body faro_nlq as
         l_top := l_top || case when l_top is not null then ', ' end || l_max || ' (' || l_voc(l_max) || ')';
       end loop;
       l_txt := 'Encontré ' || l_n || ' mención(es) relevantes entre el ' || to_char(a.desde, 'DD/MM/YYYY') ||
-               ' y el ' || to_char(a.hasta, 'DD/MM/YYYY') || ' en ' || replace(a.modulos, ':', ', ') || '. ' ||
+               ' y el ' || to_char(a.hasta, 'DD/MM/YYYY') || ' en ' || canales(a.modulos) || '. ' ||
                'Sentimiento: ' || l_pos || ' positivas, ' || l_neu || ' neutras y ' || l_neg || ' negativas. ' ||
                'Voceros con más menciones: ' || replace(l_top, 'sin identificar', 'vocero sin identificar') || '. ' ||
                l_val || ' de ' || l_n || ' están validadas; el resto son clasificaciones automáticas pendientes de revisión. ' ||
