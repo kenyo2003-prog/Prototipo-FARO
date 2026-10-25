@@ -158,6 +158,18 @@ begin
   ok('TR-12', 'La corrección humana prevalece sobre la nueva propuesta automática',
      n('select tema_id from men_mencion where mencion_id = ' || l_men) = l_id);
 
+  l_id := faro_lab.crear_lote('PRUEBA', 'PRE', faro_ia.prompt_activo('PRE', 'CLASIFICACION'), sysdate - 60, sysdate, null, 5);
+  faro_lab.ejecutar(l_id);
+  ok('TR-12', 'La prueba sobre una muestra permite comparar con la clasificación validada',
+     n('select count(*) from v_lote_comparacion where lote_id = ' || l_id) = 5);
+  l_id := faro_lab.crear_lote('REPROCESO', 'PRE', faro_ia.prompt_activo('PRE', 'CLASIFICACION'), sysdate - 10, sysdate);
+  ok('TR-12', 'El reproceso informa el alcance antes de ejecutarse', faro_lab.resumen_alcance(l_id) like '%registro(s)%se conservarán%');
+  ok('TR-12', 'El reproceso exige confirmación', falla('faro_lab.ejecutar(' || l_id || ');'));
+  faro_lab.confirmar(l_id);
+  faro_lab.ejecutar(l_id);
+  ok('TR-12', 'El resultado informa procesados, omitidos y fallidos',
+     n('select count(*) from ia_lote where lote_id = ' || l_id || ' and estado = ''COMPLETADO'' and procesados + omitidos + fallidos = registros_afectados') = 1);
+
   ------------------------------------------------------------------ TR-13
   faro_seg.set_usuario('ADMIN');
   l_n := n('select count(*) from men_soporte');

@@ -33,6 +33,7 @@ prompt == Paquetes (especificaciones)
 @paquetes/faro_red.pks
 @paquetes/faro_pre.pks
 @paquetes/faro_hit.pks
+@paquetes/faro_lab.pks
 
 prompt == Vistas
 @vistas/vistas.sql
@@ -53,6 +54,7 @@ prompt == Paquetes (cuerpos)
 @paquetes/faro_red.pkb
 @paquetes/faro_pre.pkb
 @paquetes/faro_hit.pkb
+@paquetes/faro_lab.pkb
 
 prompt == Datos semilla
 @datos/01_catalogos_base.sql

@@ -221,3 +221,27 @@ union all
 select m.*, 'OPINION_INDIVIDUAL', a.institucion_id
   from v_mencion m join cat_afiliacion a on a.afiliacion_id = m.afiliacion_id
  where m.vocero_id is not null;
+
+-- Comparación de una prueba/reproceso con el resultado anterior y la validación (TR-12)
+create or replace view v_lote_comparacion as
+select e.lote_id, e.entidad_id mencion_id, m.estado, m.modulo_codigo,
+       substr(m.fragmento, 1, 300) fragmento,
+       tv.nombre tema_validado, sv.codigo sent_validado,
+       tn.nombre tema_nuevo, sn.codigo sent_nuevo, cn.confianza confianza_nueva,
+       ta.nombre tema_anterior, sa.codigo sent_anterior,
+       case when nvl(cn.tema_id, -1) = nvl(m.tema_id, -1) and nvl(cn.sentimiento_id, -1) = nvl(m.sentimiento_id, -1)
+            then 'COINCIDE' else 'DIFIERE' end comparacion_vigente,
+       e.estado estado_ejecucion, e.error
+  from ia_ejecucion e
+  join men_mencion m on m.mencion_id = e.entidad_id
+  left join men_clasificacion_auto cn on cn.ejecucion_ia_id = e.ejecucion_id
+  outer apply (select x.tema_id, x.sentimiento_id from men_clasificacion_auto x
+                where x.mencion_id = m.mencion_id and x.lote_id is null
+                order by x.clasificacion_id desc fetch first 1 row only) ca
+  left join cat_tema tv on tv.tema_id = m.tema_id
+  left join cat_categoria sv on sv.categoria_id = m.sentimiento_id
+  left join cat_tema tn on tn.tema_id = cn.tema_id
+  left join cat_categoria sn on sn.categoria_id = cn.sentimiento_id
+  left join cat_tema ta on ta.tema_id = ca.tema_id
+  left join cat_categoria sa on sa.categoria_id = ca.sentimiento_id
+ where e.lote_id is not null and e.entidad = 'MENCION';
