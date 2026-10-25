@@ -1,0 +1,174 @@
+/* ==========================================================================
+   FARO · Sistema de diseño sobre Universal Theme (Redwood Light)
+   Tokens, componentes y ajustes de tema. Ver docs/03_Guia_UX.md
+   ========================================================================== */
+:root {
+  /* Marca: azul institucional + ámbar (la luz del faro) */
+  --faro-navy: #0b2e4f;
+  --faro-azul: #1f5f99;
+  --faro-ambar: #f2a900;
+  --faro-fondo: #f5f7fa;
+  --faro-superficie: #ffffff;
+  --faro-borde: #dde3ea;
+  --faro-texto: #1b2a3a;
+  --faro-texto-2: #4f5d6d;
+  /* Semántica (contraste AA sobre blanco y sobre su fondo tenue) */
+  --faro-ok: #1d6b45;      --faro-ok-bg: #e3f3ea;
+  --faro-info: #1c5f9e;    --faro-info-bg: #e3eefa;
+  --faro-warn: #8a5300;    --faro-warn-bg: #fff1d6;
+  --faro-danger: #b42318;  --faro-danger-bg: #fde8e6;
+  --faro-violet: #5b3fa6;  --faro-violet-bg: #eee9fb;
+  --faro-ia: #6a3fb5;      --faro-ia-bg: #f1ebfd;
+  --faro-muted: #5f6b7a;   --faro-muted-bg: #eef1f4;
+  /* Canales */
+  --faro-pre: #1c5f9e;
+  --faro-red: #6a3fb5;
+  --faro-ec: #0f766e;
+  --faro-radio: 10px;
+  --faro-sombra: 0 1px 2px rgba(11, 46, 79, .06), 0 2px 8px rgba(11, 46, 79, .06);
+
+  /* Universal Theme: cabecera y navegación con la marca */
+  --ut-header-background-color: var(--faro-navy);
+  --ut-header-text-color: #ffffff;
+  --ut-body-background-color: var(--faro-fondo);
+  --ut-palette-primary: var(--faro-azul);
+  --ut-palette-primary-contrast: #ffffff;
+  --a-button-hot-background-color: var(--faro-azul);
+  --a-button-hot-border-color: var(--faro-azul);
+}
+
+/* ---------- Cabecera ---------- */
+.t-Header-branding { background: var(--faro-navy); }
+.t-Header-logo-link, .t-Header-logo, .t-Header-logo-link span { color: #fff !important; font-weight: 700; letter-spacing: .04em; }
+.t-Header-logo-link::before {
+  content: ""; display: inline-block; width: 10px; height: 10px; margin-inline-end: 8px; border-radius: 50%;
+  background: var(--faro-ambar); box-shadow: 0 0 0 4px rgba(242, 169, 0, .25), 0 0 14px rgba(242, 169, 0, .8);
+  vertical-align: middle;
+}
+.t-Header .t-NavigationBar-item .t-Button { color: #fff; }
+.t-Body-title { background: var(--faro-superficie); border-bottom: 1px solid var(--faro-borde); }
+
+/* ---------- Encabezado de página (Hero) ---------- */
+.faro-hero { display: flex; align-items: center; gap: 16px; padding: 8px 16px 6px; }
+.faro-hero__icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+  background: var(--faro-info-bg); color: var(--faro-azul); font-size: 20px; flex: 0 0 auto; }
+.faro-hero__title { margin: 0; font-size: 1.375rem; font-weight: 700; color: var(--faro-texto); }
+.faro-hero__sub { margin: 2px 0 0; color: var(--faro-texto-2); font-size: .875rem; }
+.faro-hero__hu { margin-inline-start: auto; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.faro-hu { font: 600 .6875rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 4px 6px; border-radius: 6px;
+  background: var(--faro-muted-bg); color: var(--faro-muted); }
+
+/* ---------- Chips de estado (texto + ícono, nunca sólo color) ---------- */
+.faro-chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 999px;
+  font-size: .75rem; font-weight: 600; line-height: 1.6; white-space: nowrap; border: 1px solid transparent; }
+.faro-chip .fa { font-size: .8em; }
+.faro-chip--ok { color: var(--faro-ok); background: var(--faro-ok-bg); }
+.faro-chip--info { color: var(--faro-info); background: var(--faro-info-bg); }
+.faro-chip--warn { color: var(--faro-warn); background: var(--faro-warn-bg); }
+.faro-chip--danger { color: var(--faro-danger); background: var(--faro-danger-bg); }
+.faro-chip--violet { color: var(--faro-violet); background: var(--faro-violet-bg); }
+.faro-chip--ia { color: var(--faro-ia); background: var(--faro-ia-bg); border-color: rgba(106, 63, 181, .25); }
+.faro-chip--muted { color: var(--faro-muted); background: var(--faro-muted-bg); }
+.faro-chip--neutral { color: var(--faro-texto-2); background: #fff; border-color: var(--faro-borde); }
+
+/* ---------- Canal ---------- */
+.faro-canal { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: .8125rem; color: var(--faro-texto-2); }
+.faro-canal .fa { width: 22px; height: 22px; border-radius: 6px; display: inline-grid; place-items: center; color: #fff;
+  background: var(--faro-muted); font-size: 11px; }
+.faro-canal--pre .fa { background: var(--faro-pre); }
+.faro-canal--red .fa { background: var(--faro-red); }
+.faro-canal--ec .fa { background: var(--faro-ec); }
+
+/* ---------- KPIs ---------- */
+.faro-kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.faro-kpi { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 14px 16px 12px;
+  background: var(--faro-superficie); border: 1px solid var(--faro-borde); border-radius: var(--faro-radio);
+  box-shadow: var(--faro-sombra); color: var(--faro-texto); text-decoration: none; overflow: hidden; }
+.faro-kpi::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--faro-muted); }
+a.faro-kpi:hover, a.faro-kpi:focus-visible { border-color: var(--faro-azul); text-decoration: none; }
+a.faro-kpi:focus-visible { outline: 3px solid rgba(31, 95, 153, .35); outline-offset: 2px; }
+.faro-kpi__label { font-size: .8125rem; color: var(--faro-texto-2); display: flex; gap: 6px; align-items: center; }
+.faro-kpi__value { font-size: 1.75rem; font-weight: 700; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.faro-kpi__foot { font-size: .75rem; color: var(--faro-texto-2); }
+.faro-kpi--ok::before { background: var(--faro-ok); }
+.faro-kpi--info::before { background: var(--faro-info); }
+.faro-kpi--warn::before { background: #d48a00; }
+.faro-kpi--danger::before { background: var(--faro-danger); }
+
+/* ---------- Banners ---------- */
+.faro-banner { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: var(--faro-radio);
+  border: 1px solid; font-size: .875rem; line-height: 1.45; margin-bottom: 8px; }
+.faro-banner__icon { font-size: 18px; margin-top: 1px; }
+.faro-banner--info { color: var(--faro-info); background: var(--faro-info-bg); border-color: rgba(28, 95, 158, .25); }
+.faro-banner--warn { color: var(--faro-warn); background: var(--faro-warn-bg); border-color: rgba(138, 83, 0, .25); }
+.faro-banner--danger { color: var(--faro-danger); background: var(--faro-danger-bg); border-color: rgba(180, 35, 24, .25); }
+.faro-banner--ok { color: var(--faro-ok); background: var(--faro-ok-bg); border-color: rgba(29, 107, 69, .25); }
+.faro-banner--ia { color: var(--faro-ia); background: var(--faro-ia-bg); border-color: rgba(106, 63, 181, .25); }
+
+/* ---------- Texto de una mención / evidencia ---------- */
+.faro-cita { margin: 0; padding: 10px 14px; border-inline-start: 4px solid var(--faro-borde); background: #fbfcfd;
+  border-radius: 0 8px 8px 0; color: var(--faro-texto); font-size: .9375rem; line-height: 1.55; }
+.faro-cita--POS { border-color: var(--faro-ok); }
+.faro-cita--NEG { border-color: var(--faro-danger); }
+.faro-cita--NEU { border-color: var(--faro-muted); }
+.faro-meta { color: var(--faro-texto-2); font-size: .8125rem; }
+.faro-meta .fa { margin-inline-end: 3px; }
+.faro-fila { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
+.faro-evidencia { font-weight: 600; white-space: nowrap; }
+
+/* ---------- Panel de propuesta IA ---------- */
+.faro-ia { border: 1px dashed rgba(106, 63, 181, .45); background: var(--faro-ia-bg); border-radius: var(--faro-radio); }
+.faro-ia .t-Region-header { background: transparent; }
+.faro-ia .t-Region-title::before { content: "\f0d0"; font-family: "Font APEX", FontAwesome; margin-inline-end: 6px; color: var(--faro-ia); }
+
+/* ---------- Barra de confianza ---------- */
+.faro-conf { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; color: var(--faro-texto-2); font-variant-numeric: tabular-nums; }
+.faro-conf__bar { width: 54px; height: 6px; border-radius: 3px; background: var(--faro-muted-bg); overflow: hidden; }
+.faro-conf__bar span { display: block; height: 100%; background: var(--faro-ia); }
+
+/* ---------- Pie de confianza (trazabilidad de cifras) ---------- */
+.faro-traza { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 10px 12px; border-radius: 8px;
+  background: var(--faro-muted-bg); color: var(--faro-texto-2); font-size: .8125rem; }
+.faro-traza .fa { color: var(--faro-azul); margin-inline-end: 4px; }
+
+/* ---------- Asistente (consulta en lenguaje natural) ---------- */
+.faro-chat .t-Comments-item { margin-bottom: 14px; }
+.faro-chat .is-asistente .t-Comments-body { background: var(--faro-ia-bg); border: 1px solid rgba(106, 63, 181, .2); }
+.faro-chat .is-usuario .t-Comments-body { background: var(--faro-info-bg); }
+.faro-chat .t-Comments-body { border-radius: 12px; padding: 10px 14px; }
+.faro-refs { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+.faro-ref { font: 600 .75rem/1 ui-monospace, monospace; padding: 4px 7px; border-radius: 6px; background: #fff;
+  border: 1px solid var(--faro-borde); color: var(--faro-azul); text-decoration: none; }
+.faro-sugerencias { display: flex; flex-wrap: wrap; gap: 8px; }
+.faro-sugerencia { border: 1px solid var(--faro-borde); background: #fff; border-radius: 999px; padding: 6px 12px;
+  font-size: .8125rem; color: var(--faro-texto); cursor: pointer; }
+.faro-sugerencia:hover, .faro-sugerencia:focus-visible { border-color: var(--faro-azul); color: var(--faro-azul); }
+
+/* ---------- Línea de tiempo por canal ---------- */
+.faro-tl-canal-PRE .t-Timeline-typeIcon { background: var(--faro-pre); }
+.faro-tl-canal-RED .t-Timeline-typeIcon { background: var(--faro-red); }
+.faro-tl-canal-EC .t-Timeline-typeIcon { background: var(--faro-ec); }
+
+/* ---------- Tablas y reportes ---------- */
+.a-IRR-table td, .t-Report-cell { vertical-align: top; }
+.faro-texto-corto { max-width: 520px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.faro-num { font-variant-numeric: tabular-nums; text-align: end; }
+
+/* ---------- Tarjetas de mención (buscador) ---------- */
+.faro-cards .a-CardView { border-radius: var(--faro-radio); border-color: var(--faro-borde); box-shadow: var(--faro-sombra); }
+.faro-cards .a-CardView:hover { border-color: var(--faro-azul); }
+.faro-cards .a-CardView-title { font-size: .9375rem; }
+
+/* ---------- Formularios ---------- */
+.faro-form-nota { font-size: .8125rem; color: var(--faro-texto-2); }
+.faro-atajos kbd { font: 600 .6875rem/1 ui-monospace, monospace; padding: 2px 5px; border-radius: 4px;
+  border: 1px solid var(--faro-borde); background: #fff; box-shadow: inset 0 -1px 0 var(--faro-borde); }
+
+/* ---------- Login ---------- */
+.t-PageBody--login { background: radial-gradient(1200px 600px at 10% -10%, #1f5f99 0%, transparent 60%),
+  linear-gradient(160deg, #0b2e4f 0%, #12406b 100%); }
+.t-PageBody--login .t-Login-region { border-radius: 16px; box-shadow: 0 20px 50px rgba(0, 0, 0, .25); }
+.faro-login-pie { margin-top: 12px; font-size: .75rem; color: var(--faro-texto-2); text-align: center; }
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
